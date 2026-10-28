@@ -1005,7 +1005,7 @@ var OWN = { id: 'OWN', title: 'Your own policy', own: true, label: 'Your own pol
     if (f.decided) {
       [['threshold_basis', 'per_trip'], ['approval_sequence', 'dept_then_finance']].forEach(function (pair) {
         var option = KINDS[pair[0]].options.filter(function (o) { return o.v === pair[1]; })[0];
-        w.decisions.push({ id: 'D-' + (w.nextDecision++), key: pair[0], subject: '', value: pair[1], text: option.t + (String(form.detail || '').trim() ? ' Details: ' + String(form.detail).trim() : ''), role: 'CFO', evidence: SCRIPTED_EVIDENCE, accepted: true, time: 'scripted', scripted: true, reason: '' });
+        w.decisions.push({ id: 'D-' + (w.nextDecision++), key: pair[0], subject: '', value: pair[1], text: option.t, role: 'CFO', evidence: SCRIPTED_EVIDENCE, accepted: true, time: 'scripted', scripted: true, reason: '' });
       });
     }
     return w;
@@ -2706,7 +2706,7 @@ var OWN = { id: 'OWN', title: 'Your own policy', own: true, label: 'Your own pol
   function runEval(index) {
     if (busy) return Promise.resolve();
     busy = true; renderEvals();
-    return runEvalCase(CASES[index]).then(function (text) { evals[index].actual = text; }).catch(function (error) {
+    return Promise.resolve().then(function () { return runEvalCase(CASES[index]); }).then(function (text) { evals[index].actual = text; }).catch(function (error) {
       evals[index].actual = 'Did not run: ' + (error.message || 'something went wrong.');
     }).then(function () { busy = false; renderEvals(); });
   }
